@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public void NewQuestUI(Quest quest)
     {
         GameObject questUI = Instantiate(questUIPrefab, questUISpawnPosition.transform);
+        quest.questUIObject = questUI;
         questUI.transform.position -= new Vector3(0, questUISpawnYOffset * questUIList.Count, 0);
         questUIList.Add(questUI);
         QuestUI questUITextScriptQuestionMark = questUI.GetComponent<QuestUI>();
@@ -31,6 +32,14 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < quest.difficulty; i++)
             questUITextScriptQuestionMark.difficultyText.text += "*";
         questUITextScriptQuestionMark.timerText.text = quest.timer.ToString();
+    }
+
+    public void RemoveQuestUI(Quest quest)
+    {
+        questUIList.Remove(quest.questUIObject);
+        Destroy(quest.questUIObject);
+        PlayerManager.Instance.questList.Remove(quest);
+        Destroy(quest);
     }
 
 

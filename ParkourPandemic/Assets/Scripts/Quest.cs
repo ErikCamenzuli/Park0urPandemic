@@ -9,13 +9,16 @@ public class Quest : MonoBehaviour
     public bool isCompleted;
     public float timer;
     public int difficulty;
+    public GameObject questUIObject;
 
     public QuestTemplate questTemplate;
+    public GameObject questManagerObject;
 
-    public void Start()
+    public virtual void Start()
     {
         if (questTemplate != null)
             StatInitialisation();
+        questManagerObject = QuestGenerator.Instance.gameObject;
     }
 
     public virtual void StatInitialisation()
@@ -24,5 +27,13 @@ public class Quest : MonoBehaviour
         description = questTemplate.description;
         timer = questTemplate.timer;
         difficulty = questTemplate.difficulty;
+    }
+
+    void Update()
+    {
+        if (isCompleted)
+        {
+            GameManager.Instance.RemoveQuestUI(this);
+        }
     }
 }

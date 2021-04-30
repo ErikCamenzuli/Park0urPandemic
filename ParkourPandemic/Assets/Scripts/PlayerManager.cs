@@ -25,10 +25,20 @@ public class PlayerManager : MonoBehaviour
         Quest quest = null;
         if (questList.Count < questListMax)
         {
-            quest = gameObject.AddComponent<Quest>();
+            //I'm sorry ok i dont have time.
+            if (template is QuestTemplate && !(template is QuestPositionTemplate))
+                quest = gameObject.AddComponent<Quest>();
+            else if (template is QuestPositionTemplate positionTemplate)
+            {
+                quest = gameObject.AddComponent<QuestPosition>();
+                if (quest is QuestPosition questPosition)
+                    questPosition.positionPrefab = positionTemplate.positionPrefab;
+            }
+
             quest.questTemplate = template;
             quest.StatInitialisation();
             questList.Add(quest);
+
             return (quest);
         }
         else
