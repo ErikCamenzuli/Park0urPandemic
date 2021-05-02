@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class QuestUI : MonoBehaviour
 {
@@ -9,4 +10,6 @@ public class QuestUI : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI difficultyText;
     public TextMeshProUGUI timerText;
+
+    public Image image;
 }

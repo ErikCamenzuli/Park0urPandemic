@@ -16,4 +16,6 @@ MonoBehaviour:
   description: get to the ring!
   timer: 360
   difficulty: 1
-  positionPrefab: {fileID: 3104821985371517613, guid: c09c4460b5d25404cb2349dff8192d95, type: 3}
+  primaryColor: {r: 0.19582193, g: 1, b: 0.0141509175, a: 0.9019608}
+  secondaryColor: {r: 0.9339623, g: 0.5506853, b: 0.5506853, a: 0}
+  positionPrefab: {fileID: 5147100287087023142, guid: c1700809a00d1784e92e894feeaf2abe, type: 3}
