@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class GameManager : MonoBehaviour
     public GameObject questUISpawnPosition;
     public float questUISpawnYOffset;
 
+    public int comboScore;
+    public TextMeshProUGUI comboScoreText;
+
     [Header("Quest Spawners")]
     public int questSpawnerMax;
     public int activeQuestSpawners;
@@ -29,7 +33,7 @@ public class GameManager : MonoBehaviour
     public List<Transform> spawnPositions = new List<Transform>();
     public List<QuestTemplate> questTemplateList = new List<QuestTemplate>();
 
-    PlayerManager playerManager;
+    public PlayerManager playerManager;
 
     void Start()
     {
@@ -40,8 +44,13 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            NewQuestSpawner(GetQuestTemplate(), GetSpawnPosition());
+            QuestTemplate template = GetQuestTemplate();
+            Transform spawnPosition = GetSpawnPosition();
+            if (template != null && spawnPosition != null)
+                NewQuestSpawner(template, spawnPosition);
         }
+
+        comboScoreText.text = (000 + comboScore).ToString();
     }
 
     public QuestTemplate GetQuestTemplate()
@@ -79,13 +88,16 @@ public class GameManager : MonoBehaviour
     {
         if (activeQuestSpawners < questSpawnerMax)
         {
-            Debug.Log("Spawning New Quest Spawner at" + randomPosition.name);
             GameObject questSpawner = Instantiate(questSpawnerPrefab, randomPosition);
             QuestSpawn questSpawn = questSpawner.GetComponent<QuestSpawn>();
+
             questSpawn.questName.text = template.questName;
-            questSpawn.questTime.text = template.timer.ToString();
-            questSpawn.primaryMaterial.color = template.primaryColor;
-            questSpawn.secondaryMaterial.color = template.secondaryColor;
+            questSpawn.questTime.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(template.timer / 60), Mathf.FloorToInt(template.timer % 60));
+
+            questSpawn.meshRenderer.materials[0] = new Material(questSpawn.defaultMaterial);
+            questSpawn.meshRenderer.materials[1] = new Material(questSpawn.defaultMaterial);
+            questSpawn.meshRenderer.materials[0].color = template.primaryColor + new Color(0, 0, 0, 230);
+            questSpawn.meshRenderer.materials[1].color = template.secondaryColor + new Color(0 ,0 ,0 ,230);
             questSpawn.template = template;
 
         }
@@ -114,7 +126,7 @@ public class GameManager : MonoBehaviour
 
                 newQuest.questUI.questNameText.text = newQuest.questName;
                 newQuest.questUI.descriptionText.text = newQuest.description;
-                newQuest.questUI.timerText.text = newQuest.timer.ToString();
+                newQuest.questUI.timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(newQuest.timer / 60), Mathf.FloorToInt(newQuest.timer % 60));
                 newQuest.questUI.image.color = newQuest.primaryColor;
             }
         }

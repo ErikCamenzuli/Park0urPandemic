@@ -3649,8 +3649,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 964156c3178df6542b1d2ba39225bf01, type: 2}
-  - {fileID: 2100000, guid: 0928a717472323845b3f5ce74b0a253b, type: 2}
+  - {fileID: 2100000, guid: 6853e44d85aa8b046a858eee7daad0b1, type: 2}
+  - {fileID: 2100000, guid: 6853e44d85aa8b046a858eee7daad0b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3732,8 +3732,8 @@ MonoBehaviour:
   template: {fileID: 0}
   questSpawnCircle: {fileID: 2345895020293479486}
   questStart: {fileID: 8438913530756481565}
-  primaryMaterial: {fileID: 2100000, guid: 964156c3178df6542b1d2ba39225bf01, type: 2}
-  secondaryMaterial: {fileID: 2100000, guid: 0928a717472323845b3f5ce74b0a253b, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 6853e44d85aa8b046a858eee7daad0b1, type: 2}
+  meshRenderer: {fileID: 2345895020293479473}
 --- !u!136 &3136796144881378504
 CapsuleCollider:
   m_ObjectHideFlags: 0

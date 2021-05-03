@@ -15,8 +15,8 @@ public class QuestSpawn : MonoBehaviour
     bool isDestroying;
 
     [Header("Colors")]
-    public Material primaryMaterial;
-    public Material secondaryMaterial;
+    public Material defaultMaterial;
+    public MeshRenderer meshRenderer;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class QuestSpawn : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && gameManager.playerManager.questList.Count < gameManager.playerManager.questListMax)
         {
             isDestroying = true;
             questSpawnCircle.SetActive(false);

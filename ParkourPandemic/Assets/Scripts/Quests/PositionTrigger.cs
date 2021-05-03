@@ -10,6 +10,8 @@ public class PositionTrigger : MonoBehaviour
     public GameObject ring;
     bool isDestroying;
     public TextMeshProUGUI timerText;
+    public MeshRenderer meshRenderer;
+    public Material defaultMaterial;
 
     void OnTriggerEnter(Collider other)
     {

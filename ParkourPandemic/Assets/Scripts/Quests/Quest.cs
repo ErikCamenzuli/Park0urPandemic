@@ -41,6 +41,9 @@ public class Quest : MonoBehaviour
         timer -= Time.deltaTime;
         questUI.timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60));
         if (isCompleted)
+        {
+            gameManager.comboScore++;
             GameManager.Instance.RemoveQuestUI(this);
+        }
     }
 }
