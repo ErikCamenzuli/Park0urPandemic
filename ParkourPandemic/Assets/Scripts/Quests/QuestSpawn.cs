@@ -38,6 +38,7 @@ public class QuestSpawn : MonoBehaviour
             questSpawnCircle.SetActive(false);
             questStart.Play(0);
             gameManager.AddNewQuest(template);
+            gameManager.activeQuestSpawners--;
         }
     }
 }

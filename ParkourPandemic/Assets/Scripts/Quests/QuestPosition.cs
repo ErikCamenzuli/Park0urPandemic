@@ -13,9 +13,9 @@ public class QuestPosition : Quest
         if (spawnPostion != null)
         {
             GameObject positionTriggerObject = Instantiate(positionPrefab, gameManager.GetSpawnPosition());
+            questObject = positionTriggerObject;
             PositionTrigger positionTrigger = positionTriggerObject.GetComponent<PositionTrigger>();
             positionTrigger.quest = this;
-
             positionTrigger.meshRenderer.materials[0] = new Material(positionTrigger.defaultMaterial);
             positionTrigger.meshRenderer.materials[1] = new Material(positionTrigger.defaultMaterial);
             positionTrigger.meshRenderer.materials[0].color = positionTrigger.quest.primaryColor + new Color(0, 0, 0, 230);

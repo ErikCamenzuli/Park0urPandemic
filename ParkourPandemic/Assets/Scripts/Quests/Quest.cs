@@ -16,6 +16,7 @@ public class Quest : MonoBehaviour
     public QuestTemplate questTemplate;
     public GameManager gameManager;
     public Transform spawnPoint;
+    public GameObject questObject;
 
     public QuestUI questUI;
 
@@ -41,9 +42,8 @@ public class Quest : MonoBehaviour
         timer -= Time.deltaTime;
         questUI.timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60));
         if (isCompleted)
-        {
-            gameManager.comboScore++;
-            GameManager.Instance.RemoveQuestUI(this);
-        }
+            GameManager.Instance.EndQuest(this);
+        if (timer < 0)
+            GameManager.Instance.EndQuest(this, false);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,12 +33,18 @@ public class GameManager : MonoBehaviour
     [Header("Arrays")]
     public List<Transform> spawnPositions = new List<Transform>();
     public List<QuestTemplate> questTemplateList = new List<QuestTemplate>();
-
+    [HideInInspector]
     public PlayerManager playerManager;
+    [HideInInspector]
+    public Scene currentScene;
+
+    public bool waitingForQuest;
+    public Vector2 randomQuestSpawnTime;
 
     void Start()
     {
         playerManager = PlayerManager.Instance;
+        currentScene = SceneManager.GetActiveScene();
     }
 
     void Update()
@@ -50,7 +57,27 @@ public class GameManager : MonoBehaviour
                 NewQuestSpawner(template, spawnPosition);
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(currentScene.name);
+
+        if (waitingForQuest == false)
+        {
+            StartCoroutine(QuestSpawn(Random.Range(randomQuestSpawnTime.x, randomQuestSpawnTime.y)));
+            waitingForQuest = true;
+        }
+
         comboScoreText.text = (000 + comboScore).ToString();
+    }
+
+    IEnumerator QuestSpawn(float waitTime)
+    {
+        Debug.Log("Spawning new Quest in " + waitTime.ToString());
+        yield return new WaitForSeconds(waitTime);
+        waitingForQuest = false;
+        QuestTemplate template = GetQuestTemplate();
+        Transform spawnPosition = GetSpawnPosition();
+        if (template != null && spawnPosition != null)
+            NewQuestSpawner(template, spawnPosition);
     }
 
     public QuestTemplate GetQuestTemplate()
@@ -88,6 +115,7 @@ public class GameManager : MonoBehaviour
     {
         if (activeQuestSpawners < questSpawnerMax)
         {
+            activeQuestSpawners++;
             GameObject questSpawner = Instantiate(questSpawnerPrefab, randomPosition);
             QuestSpawn questSpawn = questSpawner.GetComponent<QuestSpawn>();
 
@@ -99,8 +127,9 @@ public class GameManager : MonoBehaviour
             questSpawn.meshRenderer.materials[0].color = template.primaryColor + new Color(0, 0, 0, 230);
             questSpawn.meshRenderer.materials[1].color = template.secondaryColor + new Color(0 ,0 ,0 ,230);
             questSpawn.template = template;
-
         }
+        else
+            Debug.Log("Max Quest Spawners Active!");
     }
 
     public void AddNewQuest(QuestTemplate template, bool isVisable = true)
@@ -132,13 +161,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RemoveQuestUI(Quest quest)
+    public void EndQuest(Quest quest, bool success = true)
     {
         for (int i = playerManager.questList.IndexOf(quest); i < playerManager.questList.Count; i++)
             playerManager.questList[i].questUI.gameObject.transform.position += new Vector3(0, questUISpawnYOffset, 0);
         Destroy(quest.questUI.gameObject);
         PlayerManager.Instance.questList.Remove(quest);
         Destroy(quest);
+        if (quest.questObject != null)
+            Destroy(quest.questObject);
+        if (success)
+            comboScore++;
+        else
+            comboScore = 0;
     }
 
 
