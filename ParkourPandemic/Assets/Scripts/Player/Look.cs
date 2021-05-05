@@ -22,18 +22,10 @@ public class Look : MonoBehaviour
         y += Input.GetAxis("Mouse X") * mouseSens;
 
         x = Mathf.Clamp(x, -90f, 90f);
-
-        transform.localRotation = Quaternion.Euler(x, 0, 0);
-        playerLook.transform.localRotation = Quaternion.Euler(0, y, 0);
-
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (GameManager.Instance.gameStatesToggle == GameManager.GameStates.Play)
         {
-            if (Cursor.lockState == CursorLockMode.Locked)
-                Cursor.lockState = CursorLockMode.None;
-            else if(Cursor.lockState == CursorLockMode.None)
-                Cursor.lockState = CursorLockMode.Locked;
-
+            transform.localRotation = Quaternion.Euler(x, 0, 0);
+            playerLook.transform.localRotation = Quaternion.Euler(0, y, 0);
         }
-
     }
 }

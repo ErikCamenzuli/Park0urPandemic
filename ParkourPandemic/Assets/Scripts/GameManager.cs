@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,10 +42,32 @@ public class GameManager : MonoBehaviour
     public bool waitingForQuest;
     public Vector2 randomQuestSpawnTime;
 
+    public enum GameStates { Play, Pause}
+    public GameStates gameStatesToggle;
+    public GameObject playStateUI;
+    public GameObject pauseStateUI;
+    public GameObject trainPrefab;
+    public Transform trainParentTransform;
+
+    public AudioSource questFailAudio;
+
+    public GameObject ppVolumeObject;
+
     void Start()
     {
         playerManager = PlayerManager.Instance;
         currentScene = SceneManager.GetActiveScene();
+        TrainSpawn();
+    }
+
+    public void TrainSpawn()
+    {
+        float delay = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            StartCoroutine(TrainSpawn(0.3f + (delay / 3f)));
+            delay++;
+        }
     }
 
     void Update()
@@ -57,6 +80,14 @@ public class GameManager : MonoBehaviour
                 NewQuestSpawner(template, spawnPosition);
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (gameStatesToggle == GameStates.Play)
+                gameStatesToggle = GameStates.Pause;
+            else if (gameStatesToggle == GameStates.Pause)
+                gameStatesToggle = GameStates.Play;
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(currentScene.name);
 
@@ -67,6 +98,28 @@ public class GameManager : MonoBehaviour
         }
 
         comboScoreText.text = (000 + comboScore).ToString();
+
+        switch (gameStatesToggle)
+        {
+            case GameStates.Play:
+                Time.timeScale = 1;
+                playStateUI.SetActive(true);
+                pauseStateUI.SetActive(false);
+                ppVolumeObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                AudioListener.volume = 1;
+                break;
+            case GameStates.Pause:
+                Time.timeScale = 0;
+                playStateUI.SetActive(false);
+                pauseStateUI.SetActive(true);
+                ppVolumeObject.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                AudioListener.volume = 0;
+                break;
+        }
     }
 
     IEnumerator QuestSpawn(float waitTime)
@@ -78,6 +131,12 @@ public class GameManager : MonoBehaviour
         Transform spawnPosition = GetSpawnPosition();
         if (template != null && spawnPosition != null)
             NewQuestSpawner(template, spawnPosition);
+    }
+
+    IEnumerator TrainSpawn(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        Instantiate(trainPrefab, trainParentTransform);
     }
 
     public QuestTemplate GetQuestTemplate()
@@ -124,8 +183,8 @@ public class GameManager : MonoBehaviour
 
             questSpawn.meshRenderer.materials[0] = new Material(questSpawn.defaultMaterial);
             questSpawn.meshRenderer.materials[1] = new Material(questSpawn.defaultMaterial);
-            questSpawn.meshRenderer.materials[0].color = template.primaryColor + new Color(0, 0, 0, 230);
-            questSpawn.meshRenderer.materials[1].color = template.secondaryColor + new Color(0 ,0 ,0 ,230);
+            questSpawn.meshRenderer.materials[0].color = template.primaryColor + new Color(0, 0, 0, 160);
+            questSpawn.meshRenderer.materials[1].color = template.secondaryColor + new Color(0 ,0 , 0, 160);
             questSpawn.template = template;
         }
         else

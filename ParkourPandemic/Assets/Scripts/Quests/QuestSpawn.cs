@@ -17,10 +17,12 @@ public class QuestSpawn : MonoBehaviour
     [Header("Colors")]
     public Material defaultMaterial;
     public MeshRenderer meshRenderer;
+    CapsuleCollider collider;
 
     void Start()
     {
         gameManager = GameManager.Instance;
+        collider = GetComponent<CapsuleCollider>();
     }
     void Update()
     {
@@ -34,6 +36,7 @@ public class QuestSpawn : MonoBehaviour
     {
         if (other.CompareTag("Player") && gameManager.playerManager.questList.Count < gameManager.playerManager.questListMax)
         {
+            collider.enabled = false;
             isDestroying = true;
             questSpawnCircle.SetActive(false);
             questStart.Play(0);

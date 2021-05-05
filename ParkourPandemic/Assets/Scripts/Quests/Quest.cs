@@ -44,6 +44,9 @@ public class Quest : MonoBehaviour
         if (isCompleted)
             GameManager.Instance.EndQuest(this);
         if (timer < 0)
+        {
+            GameManager.Instance.questFailAudio.Play();
             GameManager.Instance.EndQuest(this, false);
+        }
     }
 }

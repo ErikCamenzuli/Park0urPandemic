@@ -20,8 +20,8 @@ public class PositionTrigger : MonoBehaviour
             isDestroying = true;
             ring.SetActive(false);
             timerText.gameObject.SetActive(false);
-            dingNoise.Play();
-            quest.isCompleted = true;
+            if (!dingNoise.isPlaying)
+                dingNoise.Play();
         }
     }
 
@@ -30,6 +30,9 @@ public class PositionTrigger : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(quest.timer / 60), Mathf.FloorToInt(quest.timer % 60));
         transform.Rotate(0, 1.5f, 0 * Time.deltaTime);
         if (isDestroying && !dingNoise.isPlaying)
+        {
+            quest.isCompleted = true;
             Destroy(gameObject);
+        }
     }
 }
