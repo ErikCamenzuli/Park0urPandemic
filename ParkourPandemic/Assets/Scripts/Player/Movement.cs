@@ -125,22 +125,6 @@ public class Movement : MonoBehaviour
 
     }
 
-    public void CanPlayerClimb()
-    {
-        RaycastHit hit;
-        if(Physics.Raycast(transform.position, transform.forward, out hit, distanceWallclimb))
-        {
-            if(hit.transform.tag == "PlayerCanClimb")
-            {
-
-                if (Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.W))
-                {
-                    rb.velocity = Vector3.up;
-                }
-            }
-        }
-    }
-
     void OnCollisionEnter(Collision other)
     {
         thudAudio.Play();
