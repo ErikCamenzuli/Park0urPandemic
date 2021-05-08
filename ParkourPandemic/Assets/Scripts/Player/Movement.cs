@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     public LayerMask groundCheck;
     public LayerMask isWall;
     
-    bool isGrounded;
+    public bool isGrounded;
     bool isWallRunning;
     bool wallRight;
     bool wallLeft;
