@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using MilkShake;
 
 public class Movement : MonoBehaviour
 {
@@ -28,12 +29,15 @@ public class Movement : MonoBehaviour
     public AudioSource jumpingAudio;
     public AudioSource thudAudio;
 
+    public Shaker shaker;
+    public ShakePreset shakerPreset;
+
 
     // Start is called before the first frame update
     void Start()
     {
         //getting the rigidbody
-        rb = GetComponent<Rigidbody>();       
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -128,6 +132,7 @@ public class Movement : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         thudAudio.Play();
+        shaker.Shake(shakerPreset);
     }
 
 }
