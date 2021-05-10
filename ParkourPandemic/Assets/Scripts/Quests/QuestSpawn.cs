@@ -13,6 +13,7 @@ public class QuestSpawn : MonoBehaviour
     public GameObject questSpawnCircle;
     public AudioSource questStart;
     bool isDestroying;
+    float transparencyAura;
 
     [Header("Colors")]
     public Material defaultMaterial;
@@ -26,7 +27,12 @@ public class QuestSpawn : MonoBehaviour
     }
     void Update()
     {
+        transparencyAura = 0.05f * (Vector3.Distance(gameObject.transform.position, gameManager.playerManager.gameObject.transform.position) / 4);
+        if (transparencyAura > 0.58f)
+            transparencyAura = 0.58f;
         textCanvas.transform.rotation = Quaternion.LookRotation(textCanvas.transform.position - PlayerManager.Instance.gameObject.transform.position);
+        transform.Rotate(0, 0.5f, 0 * Time.deltaTime);
+        meshRenderer.materials[3].color = new Color(template.primaryColor.r, template.primaryColor.g, template.primaryColor.b, transparencyAura);
 
         if (isDestroying && !questStart.isPlaying)
             gameObject.SetActive(false);

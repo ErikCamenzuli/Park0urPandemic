@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI buildingNameText;
     public Animator buildingNameAnimator;
 
+    public List<Material> questAuraMaterials = new List<Material>();
+
 
     public GameObject trainPrefab;
     public Transform trainParentTransform;
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
     public AudioSource questFailAudio;
 
     public GameObject ppVolumeObject;
+    public PostProcessVolume mainVolume;
 
     void Start()
     {
@@ -182,10 +185,14 @@ public class GameManager : MonoBehaviour
             questSpawn.questName.text = template.questName;
             questSpawn.questTime.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(template.timer / 60), Mathf.FloorToInt(template.timer % 60));
 
-            questSpawn.meshRenderer.materials[0] = new Material(questSpawn.defaultMaterial);
-            questSpawn.meshRenderer.materials[1] = new Material(questSpawn.defaultMaterial);
-            questSpawn.meshRenderer.materials[0].color = template.primaryColor + new Color(0, 0, 0, 160);
-            questSpawn.meshRenderer.materials[1].color = template.secondaryColor + new Color(0 ,0 , 0, 160);
+            questSpawn.meshRenderer.materials[0] = new Material(questAuraMaterials[0]);
+            questSpawn.meshRenderer.materials[1] = new Material(questAuraMaterials[1]);
+            questSpawn.meshRenderer.materials[2] = new Material(questAuraMaterials[2]);
+            questSpawn.meshRenderer.materials[3] = new Material(questAuraMaterials[3]);
+            questSpawn.meshRenderer.materials[0].color = new Color(template.primaryColor.r, template.primaryColor.g, template.primaryColor.b, 230f / 255f);
+            questSpawn.meshRenderer.materials[1].color = new Color(template.primaryColor.r, template.primaryColor.g, template.primaryColor.b, 60f / 255f);
+            questSpawn.meshRenderer.materials[2].color = new Color(template.primaryColor.r, template.primaryColor.g, template.primaryColor.b, 30f / 255f);
+            questSpawn.meshRenderer.materials[3].color = new Color(template.primaryColor.r, template.primaryColor.g, template.primaryColor.b, 50f / 255f);
             questSpawn.template = template;
         }
         else
