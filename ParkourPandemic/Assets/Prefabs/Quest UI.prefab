@@ -280,6 +280,7 @@ GameObject:
   - component: {fileID: 5880031849185414700}
   - component: {fileID: 7707775782806341805}
   - component: {fileID: 5718945803221210688}
+  - component: {fileID: 3462954411483517181}
   m_Layer: 5
   m_Name: Quest UI
   m_TagString: Untagged
@@ -364,7 +365,28 @@ MonoBehaviour:
   descriptionText: {fileID: 0}
   difficultyText: {fileID: 0}
   timerText: {fileID: 5408949724298214493}
+  animator: {fileID: 132804666230167933}
+  imageAnimator: {fileID: 3462954411483517181}
   image: {fileID: 7707775782806341805}
+--- !u!95 &3462954411483517181
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6291564552810368521}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 11dd5180ec6e6c247ae1f7ec3311e89d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6561840322286340978
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +473,7 @@ GameObject:
   - component: {fileID: 2305292424233016462}
   - component: {fileID: 6333703158662441795}
   - component: {fileID: 5408949724298214493}
+  - component: {fileID: 132804666230167933}
   m_Layer: 5
   m_Name: Timer
   m_TagString: Untagged
@@ -535,7 +558,7 @@ MonoBehaviour:
   m_fontSize: 18
   m_fontSizeBase: 20
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -574,3 +597,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!95 &132804666230167933
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672748546058435298}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f98f26f0ba4656f43b3086dbb73d4320, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

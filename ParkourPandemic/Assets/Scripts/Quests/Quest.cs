@@ -43,6 +43,20 @@ public class Quest : MonoBehaviour
         questUI.timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(timer / 60), Mathf.FloorToInt(timer % 60));
         if (isCompleted)
             GameManager.Instance.EndQuest(this);
+
+        if (timer < 10)
+        {
+            questUI.animator.SetBool("Soon", true);
+            questUI.imageAnimator.SetBool("Soon", true);
+            questUI.timerText.color = Color.yellow;
+        }
+        if (timer > 10)
+        {
+            questUI.animator.SetBool("Soon", false);
+            questUI.imageAnimator.SetBool("Soon", false);
+            questUI.timerText.color = Color.white;
+        }
+
         if (timer < 0)
         {
             GameManager.Instance.questFailAudio.Play();
