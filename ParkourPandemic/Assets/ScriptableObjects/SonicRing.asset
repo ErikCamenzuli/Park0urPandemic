@@ -16,6 +16,6 @@ MonoBehaviour:
   description: BLUE RING???
   timer: 24
   difficulty: 0
-  primaryColor: {r: 0.11792451, g: 0.2529173, b: 1, a: 0.77254903}
+  primaryColor: {r: 0.244304, g: 0.33568883, b: 0.8490566, a: 0.77254903}
   secondaryColor: {r: 0.38875046, g: 0.85571873, b: 0.9056604, a: 0}
   positionPrefab: {fileID: 5147100287087023142, guid: c1700809a00d1784e92e894feeaf2abe, type: 3}

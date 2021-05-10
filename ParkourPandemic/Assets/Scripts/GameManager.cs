@@ -46,6 +46,10 @@ public class GameManager : MonoBehaviour
     public GameStates gameStatesToggle;
     public GameObject playStateUI;
     public GameObject pauseStateUI;
+    public TextMeshProUGUI buildingNameText;
+    public Animator buildingNameAnimator;
+
+
     public GameObject trainPrefab;
     public Transform trainParentTransform;
 
@@ -213,7 +217,6 @@ public class GameManager : MonoBehaviour
                 newQuest.questUI = questUIObject.GetComponent<QuestUI>();
 
                 newQuest.questUI.questNameText.text = newQuest.questName;
-                newQuest.questUI.descriptionText.text = newQuest.description;
                 newQuest.questUI.timerText.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(newQuest.timer / 60), Mathf.FloorToInt(newQuest.timer % 60));
                 newQuest.questUI.image.color = newQuest.primaryColor;
             }
