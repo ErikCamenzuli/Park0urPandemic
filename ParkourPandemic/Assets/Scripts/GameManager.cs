@@ -128,7 +128,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator QuestSpawn(float waitTime)
     {
-        Debug.Log("Spawning new Quest in " + waitTime.ToString());
         yield return new WaitForSeconds(waitTime);
         waitingForQuest = false;
         QuestTemplate template = GetQuestTemplate();
@@ -153,7 +152,6 @@ public class GameManager : MonoBehaviour
         int count = 0;
     Reroll:
         int randomPositionIndex = Random.Range(0, spawnPositions.Count);
-        Debug.Log("Trying" + randomPositionIndex.ToString());
         if (spawnPositions[randomPositionIndex].childCount == 0)
         {
             //spawnPositions[randomPositionIndex].gameObject.SetActive(false);
@@ -161,7 +159,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Failed! " + spawnPositions[randomPositionIndex].childCount);
             count++;
             if (count < 99)
                 goto Reroll;
