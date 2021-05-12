@@ -31,19 +31,35 @@ public class Slide : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Sliding
         if (Input.GetKeyDown(slideBind) && Input.GetKey(KeyCode.W))
             PlayerSlide();
         else if (Input.GetKeyUp(slideBind))
             PlayerGoUP();
+
+        //Crouching
+        if (Input.GetKeyDown(slideBind))
+            IsCrouching();
+        else if (Input.GetKeyUp(slideBind))
+            PlayerGoUP();
     }
 
+    /// <summary>
+    /// Crouch
+    /// </summary>
+    private void IsCrouching()
+    {
+        playerCollider.height = reducedHeight;
+    }
+
+    //Slide
     private void PlayerSlide()
     {
         playerCollider.height = reducedHeight;
         rb.AddForce(transform.forward * slidingSpeed, ForceMode.VelocityChange);
     }
 
-
+    //Player height normal
     private void PlayerGoUP()
     {
         playerCollider.height = height;

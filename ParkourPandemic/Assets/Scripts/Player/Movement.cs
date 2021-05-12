@@ -7,9 +7,10 @@ public class Movement : MonoBehaviour
     public Transform orientation;
 
     public bool isGrounded;
-    public bool isWallRunning;
-    public bool isLedgeGrabbable;
-    public bool isLooking;
+    public bool isWallRun;
+    bool isWallRunning;
+    bool isLedgeGrabbable;
+    bool isLooking;
 
     public GameObject wallObject;
 
@@ -34,6 +35,8 @@ public class Movement : MonoBehaviour
 
     public Vector3 tempPoint;
 
+    private Vector3 wallRunDir;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -49,46 +52,100 @@ public class Movement : MonoBehaviour
         else
             runningAudio.enabled = false;
 
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallRunning))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded))
         {
             rb.velocity = new Vector3(rb.velocity.x, jump, rb.velocity.z);
             jumpingAudio.Play();
             isGrounded = false;
-            isWallRunning = false;
             rb.useGravity = true;
         }
 
-        if (isWallRunning && isLedgeGrabbable && isLooking)
-        {
-            transform.Translate(new Vector3(0, 1, 0) * Time.deltaTime * speed);
-        }
-        Vector3 movePos = transform.right * x + transform.forward * y;
-        Vector3 newPos = new Vector3(movePos.x, rb.velocity.y, movePos.z);
-        rb.velocity = newPos;    
-    }
+        isWallRun = (CanWallRun() && y > 0f);
 
-    void OnCollisionEnter(Collision other)
-    {
-        thudAudio.Play();
-        shaker.Shake(shakerPreset);
-        ContactPoint point = other.GetContact(0);
-        tempPoint = point.normal;
-        Debug.Log(point.normal);
-
-        if ( point.normal.y < 0.1f && (point.normal.x > 0.3f || point.normal.z > 0.3f || point.normal.x > -0.3f || point.normal.z > -0.3f))
+        if (CanWallRun() && y > 0f)
         {
-            isWallRunning = true;
             rb.useGravity = false;
-            wallObject = other.gameObject;
+            rb.velocity = Vector3.zero;
+            Vector3 moveDir = (transform.forward * y).normalized;
+            rb.velocity = wallRunDir * Vector3.Dot(moveDir, wallRunDir) * wallRunForce * Time.deltaTime;
         }
+        else
+        {
+            Vector3 movePos = transform.right * x + transform.forward * y;
+            Vector3 newPos = new Vector3(movePos.x, rb.velocity.y, movePos.z);
+            rb.velocity = newPos;
+            rb.useGravity = true;
+        }
+
     }
 
-    private void OnCollisionExit(Collision other)
+    bool CanWallRun()
     {
-        isGrounded = false;
-        isWallRunning = false;
-        rb.useGravity = true;
+
+        // check if on ground
+        RaycastHit groundhit;
+        if (Physics.SphereCast(transform.position, 0.5f, Vector3.down, out groundhit, 0.1f, ~gameObject.layer))
+        {
+            return false;
+        }
+
+        // check if there's a wall to the right
+        if (Input.GetAxisRaw("Horizontal") > 0f)
+        {
+            RaycastHit rightHit;
+            if (Physics.Raycast(transform.position, transform.right, out rightHit, 0.6f, ~gameObject.layer))
+            {
+                if (Vector3.Dot(rightHit.normal, -transform.right) > 0.8f)
+                {
+                    Debug.Log(rightHit.normal);
+                    wallRunDir = Vector3.Cross(rightHit.normal, Vector3.up);
+                    return true;
+                }
+            }
+        }
+
+        // check if there's a wall to the left
+        if (Input.GetAxisRaw("Horizontal") < 0f)
+        {
+            RaycastHit leftHit;
+            if (Physics.Raycast(transform.position, -transform.right, out leftHit, 0.6f, ~gameObject.layer))
+            {
+                if (Vector3.Dot(leftHit.normal, transform.right) > 0.8f)
+                {
+                    wallRunDir = Vector3.Cross(leftHit.normal, Vector3.up);
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
+
+   // void OnCollisionEnter(Collision other)
+   // {
+   //     thudAudio.Play();
+   //     shaker.Shake(shakerPreset);
+   //     ContactPoint point = other.GetContact(0);
+   //     tempPoint = point.normal;
+   //     Debug.Log(point.normal);
+   //
+   //     if ( point.normal.y < 0.1f && (point.normal.x > 0.3f || point.normal.z > 0.3f || point.normal.x > -0.3f || point.normal.z > -0.3f))
+   //     {
+   //         isWallRunning = true;
+   //         rb.useGravity = false;
+   //         wallObject = other.gameObject;
+   //     }
+   // }
+
+    //private void OnCollisionExit(Collision other)
+    //{
+    //    if (isGrounded)
+    //    {
+    //        isGrounded = false;
+    //        isWallRunning = false;
+    //        rb.useGravity = true;
+    //    }
+    //}
 
     private void OnCollisionStay(Collision other)
     {
