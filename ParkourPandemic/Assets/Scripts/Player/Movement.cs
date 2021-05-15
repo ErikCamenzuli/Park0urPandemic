@@ -30,6 +30,8 @@ public class Movement : MonoBehaviour
     public AudioSource jumpingAudio;
     public AudioSource thudAudio;
 
+    public LayerMask wallRunMask;
+
     public Shaker shaker;
     public ShakePreset shakerPreset;
 
@@ -52,9 +54,11 @@ public class Movement : MonoBehaviour
         else
             runningAudio.enabled = false;
 
+        //Jump
         if (Input.GetKeyDown(KeyCode.Space) && (isGrounded))
         {
             rb.velocity = new Vector3(rb.velocity.x, jump, rb.velocity.z);
+            //rb.AddForce(new Vector3(rb.velocity.x, jump, rb.velocity.z));
             jumpingAudio.Play();
             isGrounded = false;
             rb.useGravity = true;
@@ -67,14 +71,15 @@ public class Movement : MonoBehaviour
             rb.useGravity = false;
             //rb.velocity = Vector3.zero;
             Vector3 moveDir = (transform.forward * y).normalized;
-            rb.velocity = wallRunDir * Vector3.Dot(moveDir, wallRunDir) * wallRunForce * Time.deltaTime;
+            rb.velocity = wallRunDir /** Vector3.Dot(moveDir, wallRunDir)*/ * wallRunForce * Time.deltaTime;
         }
         else
         {
             Vector3 movePos = transform.right * x + transform.forward * y;
             Vector3 newPos = new Vector3(movePos.x, rb.velocity.y, movePos.z);
-            rb.velocity = newPos;
             rb.useGravity = true;
+            rb.velocity = newPos;
+            //rb.AddForce(newPos);
         }
 
     }
@@ -84,7 +89,7 @@ public class Movement : MonoBehaviour
 
         // check if on ground
         RaycastHit groundhit;
-        if (Physics.SphereCast(transform.position, 0.5f, Vector3.down, out groundhit, 0.1f, ~gameObject.layer))
+        if (isGrounded)
         {
             return false;
         }
@@ -93,7 +98,7 @@ public class Movement : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") > 0f)
         {
             RaycastHit rightHit;
-            if (Physics.Raycast(transform.position, transform.right, out rightHit, 0.6f, ~gameObject.layer))
+            if (Physics.Raycast(transform.position, transform.right, out rightHit, 0.6f, wallRunMask))
             {
                 if (Vector3.Dot(rightHit.normal, -transform.right) > 0.8f)
                 {
@@ -108,7 +113,7 @@ public class Movement : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") < 0f)
         {
             RaycastHit leftHit;
-            if (Physics.Raycast(transform.position, -transform.right, out leftHit, 0.6f, ~gameObject.layer))
+            if (Physics.Raycast(transform.position, -transform.right, out leftHit, 0.6f, wallRunMask))
             {
                 if (Vector3.Dot(leftHit.normal, transform.right) > 0.8f)
                 {
@@ -121,12 +126,22 @@ public class Movement : MonoBehaviour
         return false;
     }
 
-
+    private void OnCollisionExit(Collision other)
+    {
+        ContactPoint point = other.GetContact(0);
+        if (point.normal.y > 0.1f)
+        {
+            isGrounded = false;
+        }
+    }
     private void OnCollisionStay(Collision other)
     {
         ContactPoint point = other.GetContact(0);
         if (point.normal.y > 0.1f)
+        {
             isGrounded = true;
+            Debug.Log(other.transform.gameObject.name);
+        }
     }
 
 }

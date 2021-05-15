@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GroundCheck
   - Train
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - 
   - GroundCheck
   - IsAWall
-  - 
-  - 
+  - Player
+  - Building
   - 
   - 
   - 
