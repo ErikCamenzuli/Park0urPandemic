@@ -1,16 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
     Rigidbody rb;
     Vector3 wallRunDir;
+    public List<GameObject> groundCheckList = new List<GameObject>();
 
     [Header("Checks")]
     public bool isGrounded;
     public bool isWallRunning;
+    public bool isLedgeGrabbing;
+
+    bool currentlyLedgeGrabbing;
+    public float ledgeGrabGoalYPosition;
 
     [Header("Stats")]
     public float speed = 10f;
+    public float movementClamp;
     public float jump = 3f;
     public float wallRunForce;
 
@@ -21,6 +28,7 @@ public class Movement : MonoBehaviour
 
     [Header("Misc.")]
     public LayerMask wallRunMask;
+    public LedgeGrabTrigger ledgeGrabTrigger;
 
     void Start()
     {
@@ -29,7 +37,6 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        CanWallRun();
         float x = Input.GetAxisRaw("Horizontal") * speed;
         float y = Input.GetAxisRaw("Vertical") * speed;
 
@@ -46,6 +53,27 @@ public class Movement : MonoBehaviour
             jumpingAudio.Play();
             isGrounded = false;
             rb.useGravity = true;
+        }
+
+        //Ledge Grab
+        RaycastHit forwardHit;
+        if (Physics.Raycast(transform.position, transform.forward, out forwardHit, 0.6f, wallRunMask) && !CanWallRun() && ledgeGrabTrigger.isLedgeGrabbableSpace)
+        {
+            ledgeGrabGoalYPosition = ledgeGrabTrigger.transform.position.y;
+            isLedgeGrabbing = true;
+        }
+
+        if (isLedgeGrabbing)
+        {
+            if (transform.position.y < ledgeGrabGoalYPosition)
+            {
+                transform.Translate(new Vector3(0, 1, 0) * Time.deltaTime * speed);
+            }
+            else
+            {
+                ledgeGrabGoalYPosition = 0;
+                isLedgeGrabbing = false;
+            }
         }
 
         //Wall Run
@@ -65,6 +93,14 @@ public class Movement : MonoBehaviour
             rb.velocity = newPos;
         }
 
+        //Movement Clamp
+        Vector3 clamp = Vector3.ClampMagnitude(rb.velocity, movementClamp);
+        rb.velocity = new Vector3(clamp.x, rb.velocity.y, clamp.z);
+
+    }
+
+    void LedgeGrab()
+    {
     }
 
     bool CanWallRun()
@@ -77,7 +113,6 @@ public class Movement : MonoBehaviour
             {
                 if (Vector3.Dot(rightHit.normal, -transform.right) > 0.8f)
                 {
-                    Debug.Log(rightHit.normal);
                     wallRunDir = Vector3.Cross(rightHit.normal, Vector3.up);
                     isWallRunning = true;
                     return true;
@@ -100,19 +135,32 @@ public class Movement : MonoBehaviour
 
             }
         }
+
         isWallRunning = false;
         return false;
     }
 
     //Ground Check
-    private void OnCollisionStay(Collision other)
+    private void OnCollisionEnter(Collision other)
     {
         ContactPoint point = other.GetContact(0);
         if (point.normal.y > 0.1f)
         {
+            groundCheckList.Add(other.transform.gameObject);
             isGrounded = true;
-            Debug.Log(other.transform.gameObject.name);
         }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+            foreach (GameObject item in groundCheckList)
+            {
+                if (item == other.transform.gameObject)
+                {
+                    groundCheckList.Remove(item);
+                    isGrounded = false;
+                }
+            }
     }
 
 }
