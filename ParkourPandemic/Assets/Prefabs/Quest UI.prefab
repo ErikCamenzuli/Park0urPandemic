@@ -365,6 +365,7 @@ MonoBehaviour:
   descriptionText: {fileID: 0}
   difficultyText: {fileID: 0}
   timerText: {fileID: 5408949724298214493}
+  distanceText: {fileID: 4358059177154021112}
   animator: {fileID: 132804666230167933}
   imageAnimator: {fileID: 3462954411483517181}
   image: {fileID: 7707775782806341805}

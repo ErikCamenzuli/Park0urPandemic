@@ -6,20 +6,22 @@ public class Movement : MonoBehaviour
     Rigidbody rb;
     Vector3 wallRunDir;
     public List<GameObject> groundCheckList = new List<GameObject>();
+    float ledgeGrabGoalYPosition;
+    bool jumpPress;
 
     [Header("Checks")]
     public bool isGrounded;
     public bool isWallRunning;
     public bool isLedgeGrabbing;
 
-    bool currentlyLedgeGrabbing;
-    public float ledgeGrabGoalYPosition;
-
     [Header("Stats")]
     public float speed = 10f;
     public float movementClamp;
     public float jump = 3f;
+    public float gravity;
+    public float gravityModifier;
     public float wallRunForce;
+    public float wallRunTimer;
 
     [Header("Audio")]
     public AudioSource runningAudio;
@@ -37,6 +39,16 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            jumpPress = true;
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+            gravityModifier = 16;
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+            gravityModifier = 0;
+    }
+
+    void FixedUpdate()
+    {
         float x = Input.GetAxisRaw("Horizontal") * speed;
         float y = Input.GetAxisRaw("Vertical") * speed;
 
@@ -47,8 +59,9 @@ public class Movement : MonoBehaviour
             runningAudio.enabled = false;
 
         //Jump
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded))
+        if (jumpPress)
         {
+            jumpPress = false;
             rb.velocity = new Vector3(rb.velocity.x, jump, rb.velocity.z);
             jumpingAudio.Play();
             isGrounded = false;
@@ -56,8 +69,7 @@ public class Movement : MonoBehaviour
         }
 
         //Ledge Grab
-        RaycastHit forwardHit;
-        if (Physics.Raycast(transform.position, transform.forward, out forwardHit, 0.6f, wallRunMask) && !CanWallRun() && ledgeGrabTrigger.isLedgeGrabbableSpace)
+        if (Physics.Raycast(transform.position, transform.forward, 0.6f, wallRunMask) && !CanWallRun() && ledgeGrabTrigger.isLedgeGrabbableSpace)
         {
             ledgeGrabGoalYPosition = ledgeGrabTrigger.transform.position.y;
             isLedgeGrabbing = true;
@@ -66,9 +78,7 @@ public class Movement : MonoBehaviour
         if (isLedgeGrabbing)
         {
             if (transform.position.y < ledgeGrabGoalYPosition)
-            {
                 transform.Translate(new Vector3(0, 1, 0) * Time.deltaTime * speed);
-            }
             else
             {
                 ledgeGrabGoalYPosition = 0;
@@ -97,10 +107,9 @@ public class Movement : MonoBehaviour
         Vector3 clamp = Vector3.ClampMagnitude(rb.velocity, movementClamp);
         rb.velocity = new Vector3(clamp.x, rb.velocity.y, clamp.z);
 
-    }
-
-    void LedgeGrab()
-    {
+        //Gravity
+        if (!isGrounded && !isLedgeGrabbing && !isWallRunning)
+            rb.velocity += new Vector3(0, -(gravity * Time.deltaTime * gravityModifier), 0);
     }
 
     bool CanWallRun()
@@ -135,7 +144,6 @@ public class Movement : MonoBehaviour
 
             }
         }
-
         isWallRunning = false;
         return false;
     }

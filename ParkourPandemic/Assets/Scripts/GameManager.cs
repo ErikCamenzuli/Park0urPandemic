@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public GameObject playStateUI;
     public GameObject pauseStateUI;
     public TextMeshProUGUI buildingNameText;
+    public TextMeshProUGUI wallRunText;
     public Animator buildingNameAnimator;
 
     public List<Material> questAuraMaterials = new List<Material>();

@@ -14,9 +14,6 @@ public class LedgeGrabTrigger : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         if (!other.CompareTag("Building"))
-        {
-            Debug.Log(other.name);
             isLedgeGrabbableSpace = false;
-        }
     }
 }

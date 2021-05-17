@@ -10,6 +10,7 @@ public class QuestUI : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI difficultyText;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI distanceText;
     public Animator animator;
     public Animator imageAnimator;
     public Image image;
